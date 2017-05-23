@@ -1,0 +1,17 @@
+{
+  "require": {
+    "noahbuscher/macaw": "dev-master",
+    "illuminate/database": "*",
+    "filp/whoops": "*"
+  },
+  "autoload": {
+    "files": [
+      "app/helper.php"
+    ],
+    "classmap": [
+      "app/controllers",
+      "app/models",
+      "services"
+    ]
+  }
+}
