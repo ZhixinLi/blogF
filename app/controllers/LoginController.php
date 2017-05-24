@@ -15,14 +15,17 @@ class LoginController extends BaseController {
         $user = param('user');
         $pwd = param('pwd');
 
-        if (empty($user) || empty($pwd))
-            throw new Exception("参数不能为空!");
+        if (empty($user) || empty($pwd)) {
+            redirect_error('login', '账号密码不能为空!', 15);
+            exit;
+        }
 
         $check = Users::where('user', $user)->where('pwd', $pwd)->first();
         if ($check) {
-
+            Session::set('uid', $check['id']);
+            redirect('admin-index');
         } else {
-            throw new Exception("账号不存在或密码错误!");
+            redirect_error('login', '账号密码错误!', 15);
         }
     }
 }
