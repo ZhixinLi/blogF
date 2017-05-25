@@ -1,37 +1,200 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
     <title>Admin</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1">
+    <title>Hello Amaze UI</title>
+
+    <!-- Set render engine for 360 browser -->
+    <meta name="renderer" content="webkit">
+
+    <!-- No Baidu Siteapp-->
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+
+    <link rel="icon" type="image/png" href="assets/i/favicon.png">
+
+    <!-- Add to homescreen for Chrome on Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="icon" sizes="192x192" href="assets/i/app-icon72x72@2x.png">
+
+    <!-- Add to homescreen for Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Amaze UI"/>
+    <link rel="apple-touch-icon-precomposed" href="assets/i/app-icon72x72@2x.png">
+
+    <!-- Tile icon for Win8 (144x144 + tile color) -->
+    <meta name="msapplication-TileImage" content="assets/i/app-icon72x72@2x.png">
+    <meta name="msapplication-TileColor" content="#0e90d2">
+
+
+    <link href="http://cdn.amazeui.org/amazeui/2.7.2/css/amazeui.min.css" rel="stylesheet">
 </head>
 
 <body>
-<h2>Hello,<?php echo $userinfo['nick']; ?></h2>
-<button id="add">新增</button>
-<div id="article" style="width:50%;margin: 0 auto">
-    <?php foreach ($article as $value): ?>
-        <h3><?php echo date('Y-m-d H:i:s', $value['time']) ?>****<?php echo $value['title'] ?></h3>
-        <button>修改</button>
-        <button>删除</button>
-        <hr>
-    <?php endforeach; ?>
+<h2>Hello,<?php echo $userinfo['nick']; ?><button class="am-btn am-btn-danger" id="logout" style="margin-left: 20px;">
+        <i class="am-icon-power-off"></i>
+        注销
+    </button></h2>
 
+<button class="am-btn am-btn-success" id="add" style="margin-left: 20px;">
+    <i class="am-icon-plus"></i>
+    新增
+</button>
+
+<div id="article">
+    <table class="am-table am-table-bordered am-table-radius am-table-striped" style="margin: 0 auto;width: 100%">
+        <thead>
+        <tr>
+            <th style="text-align: center">#</th>
+            <th style="text-align: center">时间</th>
+            <th style="text-align: center">标题</th>
+            <th style="text-align: center">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($article as $key => $value): ?>
+            <tr>
+                <td><?php echo $value['id']; ?></td>
+                <td><?php echo date('Y-m-d H:i:s', $value['time']); ?></td>
+                <td><?php echo $value['title']; ?></td>
+                <td style="text-align: center">
+                    <button type="button" class="am-btn am-btn-warning am-default am-btn-xs" onclick="openModal(<?php echo $key; ?>)">修改</button>
+                    <?php if ($value['status'] == 1) {
+                        echo '<button type="button" class="am-btn am-btn-danger am-default am-btn-xs" onclick=' . 'closeArticle(' . $value['id'] . ')>关闭</button>';
+                    } else {
+                        echo '<button type="button" class="am-btn am-btn-success am-default am-btn-xs" onclick=' . 'openArticle(' . $value['id'] . ')>开启</button>';
+                    }
+                    ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+
+    <div class="am-popup" id="my-popup" style="border-radius: 2px;">
+        <div class="am-popup-inner">
+            <div class="am-popup-hd">
+                <h4 class="am-popup-title">
+                    <div class="am-form am-form-group" style="margin-top: 3px;">
+                        <input type="text" id="modifytitle" placeholder="标题" required/>
+                    </div>
+                </h4>
+                <span data-am-modal-close
+                      class="am-close">&times;</span>
+            </div>
+            <div class="am-popup-bd">
+                <div class="am-form am-form-group">
+                    <textarea id="modifycontent" style="height: 500px;" placeholder="内容" required></textarea>
+                </div>
+            </div>
+            <input type="hidden" id="modifyid">
+            <div style="position:absolute;bottom:0;z-index:1000;width:100%;height:43px;border-top:1px solid #dedede;background-color:#fff">
+                <button class="am-btn am-btn-success am-btn-block" style="width: 90%;margin: 0 auto;margin-top: 2px;" id="modifycommit">提交</button>
+            </div>
+        </div>
+    </div>
 </div>
+
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script src="http://cdn.amazeui.org/amazeui/2.7.2/js/amazeui.min.js"></script>
+<script src="http://cdn.amazeui.org/amazeui/2.7.2/js/amazeui.ie8polyfill.min.js"></script>
+<script src="http://cdn.amazeui.org/amazeui/2.7.2/js/amazeui.widgets.helper.min.js"></script>
 </body>
 </html>
 
-<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
 <script>
+    var data =<?php echo $article;?>;
     $('#add').click(function () {
-        if ($('#title').length == 0) {
-            $('#article').append('<label>标题: <input type="text" id="title"> </label> <br><br><label>内容: <textarea id="content" style="width: 80%;height: 200px"> </textarea></label> <button id="commit">提交</button>');
-        }
+        $('#modifytitle').val('');
+        $('#modifycontent').html('');
+        $('#modifyid').val('');
+
+        $('#my-popup').modal({closeViaDimmer: false});
     });
+
+    $('#logout').click(function () {
+        $.ajax({
+            type: 'POST',
+            url: "<?php echo dirname($_SERVER['PHP_SELF']) . '/admin-logout';?>",
+            success: function () {
+                location.reload();
+            },
+            error: function () {
+                alert('请求错误，请刷新重试!')
+            }
+        });
+    });
+
+    $('#modifycommit').click(function () {
+        $.ajax({
+            type: 'POST',
+            url: "<?php echo dirname($_SERVER['PHP_SELF']) . '/admin-modify';?>",
+            data: {
+                id: $('#modifyid').val(),
+                title: $('#modifytitle').val(),
+                content: $('#modifycontent').val()
+            },
+            success: function () {
+                location.reload();
+            },
+            error: function () {
+                alert('请求错误，请刷新重试!')
+            }
+        });
+    });
+
+    function openModal(key) {
+        $('#modifytitle').val(data[key]['title']);
+        $('#modifycontent').html(data[key]['content']);
+        $('#modifyid').val(data[key]['id']);
+
+        $('#my-popup').modal({closeViaDimmer: false});
+    }
+
+    function closeArticle(id) {
+        $.ajax({
+            type: 'POST',
+            url: "<?php echo dirname($_SERVER['PHP_SELF']) . '/admin-status';?>",
+            data: {
+                id: id,
+                status: 0
+            },
+            success: function () {
+                location.reload();
+            },
+            error: function () {
+                alert('请求错误，请刷新重试!')
+            }
+        });
+    }
+
+    function openArticle(id) {
+        $.ajax({
+            type: 'POST',
+            url: "<?php echo dirname($_SERVER['PHP_SELF']) . '/admin-status';?>",
+            data: {
+                id: id,
+                status: 1
+            },
+            success: function () {
+                location.reload();
+            },
+            error: function () {
+                alert('请求错误，请刷新重试!')
+            }
+        });
+    }
 
     $(document).on('click', '#commit', function () {
         $.ajax({
             type: 'POST',
-            url: "<?php echo dirname($_SERVER['PHP_SELF']) . '/admin-add'?>",
+            url: "<?php echo dirname($_SERVER['PHP_SELF']) . '/admin-add';?>",
             data: {
                 title: $('#title').val(),
                 content: $('#content').val()

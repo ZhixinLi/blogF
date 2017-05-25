@@ -17,7 +17,6 @@ class LoginController extends BaseController {
 
         if (empty($user) || empty($pwd)) {
             redirect_error('login', '账号密码不能为空!', 15);
-            exit;
         }
 
         $check = Users::where('user', $user)->where('pwd', $pwd)->first();

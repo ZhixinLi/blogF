@@ -17,6 +17,12 @@ Macaw::get("/admin-index", 'AdminController@index');
 
 Macaw::post("/admin-add", 'AdminController@add');
 
+Macaw::post("/admin-modify", 'AdminController@modify');
+
+Macaw::post("/admin-status", 'AdminController@status');
+
+Macaw::post("/admin-logout", 'AdminController@logout');
+
 Macaw::$error_callback = function () {
     redirect_404();
 };

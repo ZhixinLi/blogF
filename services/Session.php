@@ -27,8 +27,6 @@ class Session {
     }
 
     public static function del($name) {
-        self::init();
-
         unset($_SESSION[$name]);
     }
 

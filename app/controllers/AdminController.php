@@ -8,9 +8,11 @@
 class AdminController extends AuthController {
 
     public function index() {
+
+
         $this->view = View::make('admin/index')
             ->with('userinfo', $this->view->data)
-            ->with('article', Articles::all());
+            ->with('article', Articles::orderBy('time', 'desc')->get());
     }
 
     public function add() {
@@ -21,13 +23,37 @@ class AdminController extends AuthController {
             redirect('admin-index');
         }
 
-        $article = new Articles;
+        Articles::insert(['title' => $title, 'content' => $content, 'time' => time(), 'date' => date('Ymd')]);
+    }
 
-        $article->title = $title;
-        $article->content = $content;
-        $article->date = date('Ymd');
-        $article->time = time();
+    public function modify() {
+        $id = param('id');
+        $title = param('title');
+        $content = param('content');
 
-        $article->save();
+        if (empty($title) || empty($content)) {
+            redirect('admin-index');
+        }
+
+        if (!empty($id)) {
+            Articles::where('id', $id)->update(['title' => $title, 'content' => $content, 'time' => time(), 'date' => date('Ymd')]);
+        } else {
+            Articles::insert(['title' => $title, 'content' => $content, 'time' => time(), 'date' => date('Ymd')]);
+        }
+    }
+
+    public function status() {
+        $id = param('id');
+        $status = param('status');
+
+        if (empty($id) || empty($status)) {
+            redirect('admin-index');
+        }
+
+        Articles::where('id', $id)->update(['status' => $status]);
+    }
+
+    public function logout() {
+        Session::del('uid');
     }
 }
