@@ -37,12 +37,47 @@
 </head>
 
 <body>
-<h2>Hello,<?php echo $userinfo['nick']; ?><button class="am-btn am-btn-danger" id="logout" style="margin-left: 20px;">
-        <i class="am-icon-power-off"></i>
-        注销
-    </button></h2>
 
-<button class="am-btn am-btn-success" id="add" style="margin-left: 20px;">
+<header class="am-topbar">
+    <h1 class="am-topbar-brand">
+        Hello,<a href="#"><?php echo $userinfo['nick']; ?></a>
+    </h1>
+
+    <button class="am-topbar-btn am-topbar-toggle am-btn am-btn-sm am-btn-success am-show-sm-only"
+            data-am-collapse="{target: '#doc-topbar-collapse'}"><span class="am-sr-only">导航切换</span> <span
+            class="am-icon-bars"></span></button>
+
+    <div class="am-collapse am-topbar-collapse" id="doc-topbar-collapse">
+        <ul class="am-nav am-nav-pills am-topbar-nav">
+            <li class="am-active"><a href="#">首页</a></li>
+            <li><a href="#">项目</a></li>
+            <li class="am-dropdown" data-am-dropdown>
+                <a class="am-dropdown-toggle" data-am-dropdown-toggle href="javascript:;">
+                    菜单 <span class="am-icon-caret-down"></span>
+                </a>
+                <ul class="am-dropdown-content">
+                    <li class="am-dropdown-header">标题</li>
+                    <li><a href="#">关于我们</a></li>
+                    <li><a href="#">关于字体</a></li>
+                    <li><a href="#">TIPS</a></li>
+                </ul>
+            </li>
+        </ul>
+
+        <form class="am-topbar-form am-topbar-left am-form-inline am-topbar-right" role="search">
+            <div class="am-form-group">
+                <input type="text" class="am-form-field am-input-sm" placeholder="搜索文章">
+            </div>
+            <button type="submit" class="am-btn am-btn-default am-btn-sm">搜索</button>
+            <button class="am-btn am-btn-danger" id="logout" style="margin-left: 20px;">
+                <i class="am-icon-power-off"></i>
+                注销
+            </button>
+        </form>
+    </div>
+</header>
+
+<button class="am-btn am-btn-success" id="add" style="margin-left: 20px;margin-bottom: 20px;">
     <i class="am-icon-plus"></i>
     新增
 </button>
@@ -76,6 +111,8 @@
         <?php endforeach; ?>
         </tbody>
     </table>
+
+    <?php require BASE_PATH . '/app/views/layout/paginator.php'; ?>
 
     <div class="am-popup" id="my-popup" style="border-radius: 2px;">
         <div class="am-popup-inner">
@@ -151,7 +188,7 @@
 
     function openModal(key) {
         $('#modifytitle').val(data[key]['title']);
-        $('#modifycontent').html(data[key]['content']);
+        $('#modifycontent').html(JSON.parse(data[key]['content']));
         $('#modifyid').val(data[key]['id']);
 
         $('#my-popup').modal({closeViaDimmer: false});

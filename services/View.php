@@ -34,6 +34,11 @@ class View {
         return $this;
     }
 
+    public function paginate($page, $limit, $count, $url) {
+        $this->data['paginator'] = Paginator::data($page, $limit, $count, $url);
+        return $this;
+    }
+
     private static function getFilePath($viewName) {
         $filePath = str_replace('.', '/', $viewName);
         return BASE_PATH . self::VIEW_BASE_PATH . $filePath . '.php';

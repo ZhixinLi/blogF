@@ -7,6 +7,10 @@
 
 use NoahBuscher\Macaw\Macaw;
 
+Macaw::get('/test', function () {
+    echo config('common.page_num');
+});
+
 Macaw::get('/home', 'HomeController@home');
 
 Macaw::get('/login', 'LoginController@index');

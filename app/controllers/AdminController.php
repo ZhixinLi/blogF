@@ -8,11 +8,13 @@
 class AdminController extends AuthController {
 
     public function index() {
-
+        $limit = config('common.page_num');
+        $page = (int)get('page', 1);
+        $count = Articles::count();
 
         $this->view = View::make('admin/index')
             ->with('userinfo', $this->view->data)
-            ->with('article', Articles::orderBy('time', 'desc')->get());
+            ->with('article', Articles::orderBy('time', 'desc')->offset(($page - 1) * $limit)->limit($limit)->get())->paginate($page, $limit, $count, 'admin-index');
     }
 
     public function add() {
@@ -23,7 +25,7 @@ class AdminController extends AuthController {
             redirect('admin-index');
         }
 
-        Articles::insert(['title' => $title, 'content' => $content, 'time' => time(), 'date' => date('Ymd')]);
+        Articles::insert(['title' => $title, 'content' => json_encode($content), 'time' => time(), 'date' => date('Ymd')]);
     }
 
     public function modify() {
@@ -36,9 +38,9 @@ class AdminController extends AuthController {
         }
 
         if (!empty($id)) {
-            Articles::where('id', $id)->update(['title' => $title, 'content' => $content, 'time' => time(), 'date' => date('Ymd')]);
+            Articles::where('id', $id)->update(['title' => $title, 'content' => json_encode($content), 'time' => time(), 'date' => date('Ymd')]);
         } else {
-            Articles::insert(['title' => $title, 'content' => $content, 'time' => time(), 'date' => date('Ymd')]);
+            Articles::insert(['title' => $title, 'content' => json_encode($content), 'time' => time(), 'date' => date('Ymd')]);
         }
     }
 

@@ -33,6 +33,26 @@ function post($key, $default = null) {
     return $_POST[$key];
 }
 
+function config($value) {
+    if (empty($value)) {
+        return null;
+    }
+
+    $param = explode('.', $value);
+    if (empty($param[0]) || empty($param[1])) {
+        return null;
+    }
+
+    $arr = require BASE_PATH . "/config/$param[0].php";
+
+    if (empty($arr)) {
+        return null;
+    }
+
+    return $arr[$param[1]];
+}
+
+
 /**
  * 重定向
  */
