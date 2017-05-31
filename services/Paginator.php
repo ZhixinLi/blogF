@@ -6,8 +6,8 @@
  * Time: 17:12
  */
 class Paginator {
-    
-    public static function data($page, $limit, $count, $url) {
+
+    public static function data($page, $limit, $count, $url, $param_arr) {
         $nextpage = $page;
         $pages = ceil((int)$count / (int)$limit);
 
@@ -34,12 +34,19 @@ class Paginator {
             $prevpage = 1;
         }
 
+        $search_str = '';
+        if (!empty($param_arr)) {
+            foreach ($param_arr as $key => $value) {
+                $search_str .= "&$key=$value";
+            }
+        }
+
         $arr = [
             "pagenum"  => $pages,
             "prevpage" => $prev,
             "nextpage" => $next,
-            "prevurl"  => dirname($_SERVER['PHP_SELF']) . "/$url?page=$prevpage",
-            "nexturl"  => dirname($_SERVER['PHP_SELF']) . "/$url?page=$nextpage",
+            "prevurl"  => empty($search_str) ? dirname($_SERVER['PHP_SELF']) . "/$url?page=$prevpage" : dirname($_SERVER['PHP_SELF']) . "/$url?page=$prevpage" . $search_str,
+            "nexturl"  => empty($search_str) ? dirname($_SERVER['PHP_SELF']) . "/$url?page=$nextpage" : dirname($_SERVER['PHP_SELF']) . "/$url?page=$nextpage" . $search_str,
             "pages"    => []
         ];
 
@@ -52,7 +59,7 @@ class Paginator {
                 ];
             } else {
                 $data = [
-                    'url'       => dirname($_SERVER['PHP_SELF']) . "/$url?page=$i",
+                    'url'       => empty($search_str) ? dirname($_SERVER['PHP_SELF']) . "/$url?page=$i" : dirname($_SERVER['PHP_SELF']) . "/$url?page=$i" . $search_str,
                     'isCurrent' => 1,
                     'num'       => $i
                 ];

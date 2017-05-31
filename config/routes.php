@@ -13,6 +13,12 @@ Macaw::get('/test', function () {
 
 Macaw::get('/home', 'HomeController@home');
 
+Macaw::get('/search', 'HomeController@search');
+
+Macaw::get('/date', 'HomeController@date');
+
+Macaw::get('/essay', 'HomeController@essay');
+
 Macaw::get('/login', 'LoginController@index');
 
 Macaw::post('/dologin', 'LoginController@login');

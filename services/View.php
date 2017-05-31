@@ -34,8 +34,8 @@ class View {
         return $this;
     }
 
-    public function paginate($page, $limit, $count, $url) {
-        $this->data['paginator'] = Paginator::data($page, $limit, $count, $url);
+    public function paginate($page, $limit, $count, $url, $param_arr = null) {
+        $this->data['paginator'] = Paginator::data($page, $limit, $count, $url, $param_arr);
         return $this;
     }
 

@@ -74,38 +74,40 @@
     </div>
     <div class="am-u-md-8">
         <div class="am-panel-group" id="accordion">
-            <div data-am-widget="list_news" class="am-list-news am-list-news-default">
-                <!--列表标题-->
-                <div class="am-list-news-hd am-cf">
-                    <!--带更多链接-->
-                    <a href="###" class="">
-                        <h1>文章列表</h1>
-                    </a>
+            <article class="am-article">
+                <div class="am-article-hd">
+                    <h1 class="am-article-title"><?php echo $essay['title']; ?></h1>
+                    <ol class="am-breadcrumb">
+                        <li><a href="#">首页</a></li>
+                        <li><a href="#">分类</a></li>
+                        <li class="am-active">内容</li>
+                    </ol>
+                    <p class="am-article-meta"><?php echo date('Y-m-d H:i:s', $essay['time']); ?></p>
                 </div>
-
-                <div class="am-list-news-bd">
-                    <ul class="am-list">
-                        <!--缩略图在标题上方-->
-                        <?php foreach ($article as $key => $value): ?>
-                            <li class="am-g am-list-item-desced am-list-item-thumbed am-list-item-thumb-top">
-                                <div class=" am-list-main">
-                                    <h3 class="am-list-item-hd">
-                                        <a href="<?php echo dirname($_SERVER['PHP_SELF']) . "/essay?id=" . $value['id']; ?>"><?php echo $value['title']; ?></a>
-                                    </h3>
-                                    <span class="am-list-date"><?php echo date('Y-m-d H:i:s', $value['time']); ?></span>
-                                    <div class="am-list-item-text">
-                                        <?php echo json_decode($value['content']); ?>
-                                    </div>
-
-                                </div>
-                            </li>
-                        <?php endforeach; ?>
-                    </ul>
+                <hr class="am-article-divider">
+                <div class="am-article-bd">
+                    <?php echo json_decode($essay['content']); ?>
                 </div>
+            </article>
+
+            <div class="am-cf">
+                <?php if (empty($prevdata)) {
+                    echo '<a href="#" class="am-btn am-btn-success am-fl" style="width: 20%;" disabled="disabled">没有了</a>';
+                } else {
+                    echo '<a class="am-btn am-btn-success am-fl" style="width: 20%;" href="' . dirname($_SERVER['PHP_SELF']) . "/essay?id=" . $prevdata['id'] . '" target="_blank" data-am-popover="{content:\'' . $prevdata['title'] . '\',trigger:\'' . 'hover focus' . '\'}">上一篇</a>';
+                }
+                ?>
+
+                <a class="am-btn am-btn-primary" style="width: 20%;margin-left: 20%" href="<?php echo dirname($_SERVER['PHP_SELF']) . "/home"; ?>">返回</a>
+
+                <?php if (empty($nextdata)) {
+                    echo '<a href="#" class="am-btn am-btn-success am-fr" style="width: 20%;" disabled="disabled">没有了</a>';
+                } else {
+                    echo '<a class="am-btn am-btn-success am-fr" style="width: 20%;" href="' . dirname($_SERVER['PHP_SELF']) . "/essay?id=" . $nextdata['id'] . '" target="_blank" data-am-popover="{content:\'' . $nextdata['title'] . '\',trigger:\'' . 'hover focus' . '\'}">下一篇</a>';
+                }
+                ?>
             </div>
         </div>
-
-        <?php require BASE_PATH . '/app/views/layout/paginator.php'; ?>
     </div>
 
     <div class="am-u-md-4 blog-sidebar">
@@ -113,21 +115,21 @@
             <section class="am-panel am-panel-default">
                 <div class="am-panel-hd">搜索</div>
                 <div class="am-input-group">
-                    <input type="text" class="am-form-field" id="search_str">
+                    <input type="text" class="am-form-field">
                     <span class="am-input-group-btn">
-                        <button class="am-btn am-btn-primary" id="search" type="button">搜索</button>
-                    </span>
+        <button class="am-btn am-btn-primary" type="button">搜索</button>
+      </span>
                 </div>
             </section>
 
             <section class="am-panel am-panel-default">
                 <div class="am-panel-hd">目录</div>
                 <ul class="am-list blog-list">
-                    <li><a href="<?php echo dirname($_SERVER['PHP_SELF']) . "/date?month=1"; ?>">2017年1月</a></li>
-                    <li><a href="<?php echo dirname($_SERVER['PHP_SELF']) . "/date?month=2"; ?>">2017年2月</a></li>
-                    <li><a href="<?php echo dirname($_SERVER['PHP_SELF']) . "/date?month=3"; ?>">2017年3月</a></li>
-                    <li><a href="<?php echo dirname($_SERVER['PHP_SELF']) . "/date?month=4"; ?>">2017年4月</a></li>
-                    <li><a href="<?php echo dirname($_SERVER['PHP_SELF']) . "/date?month=5"; ?>">2017年5月</a></li>
+                    <li><a href="#">2017年1月</a></li>
+                    <li><a href="#">2017年2月</a></li>
+                    <li><a href="#">2017年3月</a></li>
+                    <li><a href="#">2017年4月</a></li>
+                    <li><a href="#">2017年5月</a></li>
                 </ul>
             </section>
 
@@ -175,10 +177,6 @@
 </html>
 
 <script>
-    $('#search').click(function () {
-        window.location.href = "<?php echo dirname($_SERVER['PHP_SELF']) . '/search';?>" + '?str=' + $('#search_str').val();
-    });
-
     (function () {
 
         var radius = 120;

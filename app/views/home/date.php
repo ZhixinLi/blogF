@@ -79,7 +79,7 @@
                 <div class="am-list-news-hd am-cf">
                     <!--带更多链接-->
                     <a href="###" class="">
-                        <h1>文章列表</h1>
+                        <h1>按时间查询</h1>
                     </a>
                 </div>
 

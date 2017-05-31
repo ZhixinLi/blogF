@@ -33,6 +33,13 @@ function post($key, $default = null) {
     return $_POST[$key];
 }
 
+/**
+ * 获取配置参数
+ *
+ * @param $value
+ *
+ * @return null
+ */
 function config($value) {
     if (empty($value)) {
         return null;
@@ -55,6 +62,8 @@ function config($value) {
 
 /**
  * 重定向
+ *
+ * @param $param
  */
 function redirect($param) {
     $url = dirname($_SERVER['PHP_SELF']) . '/' . $param;
