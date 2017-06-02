@@ -12,7 +12,12 @@ class HomeController extends BaseController {
         $page = (int)get('page', 1);
         $count = Articles::where('status', 1)->count();
 
-        $this->view = View::make('home/home')->with('article', Articles::where('status', 1)->offset(($page - 1) * $limit)->limit($limit)->get())->paginate($page, $limit, $count, 'home');
+        $this->view = View::make('home/home')
+            ->with('article', Articles::where('status', 1)
+                ->offset(($page - 1) * $limit)
+                ->limit($limit)->get())
+            ->with('tags', Articles::where('status', 1)->orderByRaw('RAND()')->take(25)->get())
+            ->paginate($page, $limit, $count, 'home');
     }
 
     public function essay() {
@@ -29,7 +34,14 @@ class HomeController extends BaseController {
         $prevdata = Articles::where('id', '<', $id)->where('status', '<>', 0)->orderBy('id', 'desc')->first();
         $nextdata = Articles::where('id', '>', $id)->where('status', '<>', 0)->orderBy('id', 'asc')->first();
 
-        $this->view = View::make('home/essay')->with('essay', $data)->with('prevdata', $prevdata)->with('nextdata', $nextdata);
+        $this->view = View::make('home/essay')
+            ->with('essay', $data)
+            ->with('prevdata', $prevdata)
+            ->with('nextdata', $nextdata)
+            ->with('tags', Articles::where('status', 1)
+                ->orderByRaw('RAND()')
+                ->take(30)
+                ->get());
     }
 
     public function search() {
@@ -43,7 +55,16 @@ class HomeController extends BaseController {
         $page = (int)get('page', 1);
         $count = Articles::where('status', 1)->where('title', 'like', '%' . $str . '%')->count();
 
-        $this->view = View::make('home/search')->with('article', Articles::where('status', 1)->where('title', 'like', '%' . $str . '%')->offset(($page - 1) * $limit)->limit($limit)->get())->paginate($page, $limit, $count, 'search', ['str' => $str]);
+        $this->view = View::make('home/search')
+            ->with('article', Articles::where('status', 1)
+                ->where('title', 'like', '%' . $str . '%')
+                ->offset(($page - 1) * $limit)
+                ->limit($limit)->get())
+            ->with('tags', Articles::where('status', 1)
+                ->orderByRaw('RAND()')
+                ->take(30)
+                ->get())
+            ->paginate($page, $limit, $count, 'search', ['str' => $str]);
     }
 
     public function date() {
@@ -61,6 +82,16 @@ class HomeController extends BaseController {
         $page = (int)get('page', 1);
         $count = Articles::where('status', 1)->where('time', '>=', $start)->where('time', '<=', $end)->count();
 
-        $this->view = View::make('home/date')->with('article', Articles::where('status', 1)->where('time', '>=', $start)->where('time', '<=', $end)->offset(($page - 1) * $limit)->limit($limit)->get())->paginate($page, $limit, $count, 'date', ['year' => $year, 'month' => $month]);
+        $this->view = View::make('home/date')
+            ->with('article', Articles::where('status', 1)
+                ->where('time', '>=', $start)
+                ->where('time', '<=', $end)
+                ->offset(($page - 1) * $limit)
+                ->limit($limit)->get())
+            ->with('tags', Articles::where('status', 1)
+                ->orderByRaw('RAND()')
+                ->take(30)
+                ->get())
+            ->paginate($page, $limit, $count, 'date', ['year' => $year, 'month' => $month]);
     }
 }

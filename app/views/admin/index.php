@@ -127,6 +127,9 @@
             </div>
             <div class="am-popup-bd">
                 <div class="am-form am-form-group">
+                    <label>
+                        <input type="text" placeholder="标签" id="tag" required>
+                    </label>
                     <textarea id="modifycontent" style="height: 500px;" placeholder="内容" required></textarea>
                 </div>
             </div>
@@ -151,6 +154,7 @@
         $('#modifytitle').val('');
         $('#modifycontent').html('');
         $('#modifyid').val('');
+        $('#tag').val('');
 
         $('#my-popup').modal({closeViaDimmer: false});
     });
@@ -175,7 +179,8 @@
             data: {
                 id: $('#modifyid').val(),
                 title: $('#modifytitle').val(),
-                content: $('#modifycontent').val()
+                content: $('#modifycontent').val(),
+                tag: $('#tag').val()
             },
             success: function () {
                 location.reload();
@@ -190,6 +195,7 @@
         $('#modifytitle').val(data[key]['title']);
         $('#modifycontent').html(JSON.parse(data[key]['content']));
         $('#modifyid').val(data[key]['id']);
+        $('#tag').val(data[key]['tag']);
 
         $('#my-popup').modal({closeViaDimmer: false});
     }
@@ -227,21 +233,4 @@
             }
         });
     }
-
-    $(document).on('click', '#commit', function () {
-        $.ajax({
-            type: 'POST',
-            url: "<?php echo dirname($_SERVER['PHP_SELF']) . '/admin-add';?>",
-            data: {
-                title: $('#title').val(),
-                content: $('#content').val()
-            },
-            success: function () {
-                location.reload();
-            },
-            error: function () {
-                alert('请求错误，请刷新重试!')
-            }
-        });
-    });
 </script>

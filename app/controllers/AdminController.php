@@ -17,30 +17,20 @@ class AdminController extends AuthController {
             ->with('article', Articles::orderBy('time', 'desc')->offset(($page - 1) * $limit)->limit($limit)->get())->paginate($page, $limit, $count, 'admin-index');
     }
 
-    public function add() {
-        $title = param('title');
-        $content = param('content');
-
-        if (empty($title) || empty($content)) {
-            redirect('admin-index');
-        }
-
-        Articles::insert(['title' => $title, 'content' => json_encode($content), 'time' => time(), 'date' => date('Ymd')]);
-    }
-
     public function modify() {
-        $id = param('id');
-        $title = param('title');
-        $content = param('content');
+        $id = post('id');
+        $title = post('title');
+        $content = post('content');
+        $tag = post('tag');
 
-        if (empty($title) || empty($content)) {
+        if (empty($title) || empty($content) || empty($tag)) {
             redirect('admin-index');
         }
 
         if (!empty($id)) {
-            Articles::where('id', $id)->update(['title' => $title, 'content' => json_encode($content), 'time' => time(), 'date' => date('Ymd')]);
+            Articles::where('id', $id)->update(['title' => $title, 'tag' => $tag, 'content' => json_encode($content), 'time' => time(), 'date' => date('Ymd')]);
         } else {
-            Articles::insert(['title' => $title, 'content' => json_encode($content), 'time' => time(), 'date' => date('Ymd')]);
+            Articles::insert(['title' => $title, 'tag' => $tag, 'content' => json_encode($content), 'time' => time(), 'date' => date('Ymd')]);
         }
     }
 
